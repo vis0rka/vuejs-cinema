@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import './style.scss';
-import MovieList from './components/MovieList.vue';
-import MovieFilter from './components/MovieFilter.vue';
+import VueRouter from 'vue-router';
 
 import { checkFilter } from './util/bus';
 
@@ -15,6 +14,12 @@ Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.mome
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', { get() { return this.$root.bus } });
 
+Vue.use(VueRouter);
+
+import routes from './util/routes';
+
+const router = new VueRouter({routes});
+
 new Vue({
   el: '#app',
   data: {
@@ -25,17 +30,13 @@ new Vue({
     day: moment(),
     bus
   },
-  methods: {  },
-  components: {
-    MovieList,
-    MovieFilter,
-  },
   created() {
     fetch('/api', { method: 'GET' })
       .then(dataWrappedByPromise => dataWrappedByPromise.json())
       .then(resdata => this.movies = resdata);
 
     this.$bus.$on('check-filter', checkFilter.bind(this));
-  }
+  },
+  router
 });
 
