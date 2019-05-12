@@ -2,7 +2,7 @@ import Vue from 'vue';
 import './style.scss';
 import VueRouter from 'vue-router';
 
-import { checkFilter } from './util/bus';
+import { checkFilter, setDay } from './util/bus';
 
 import VueResource from 'vue-resource';
 Vue.use(VueResource);
@@ -14,11 +14,14 @@ Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.mome
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', { get() { return this.$root.bus } });
 
-Vue.use(VueRouter);
 
 import routes from './util/routes';
-
 const router = new VueRouter({routes});
+Vue.use(VueRouter);
+
+import tooltip from './util/tooltip';
+Vue.use(tooltip);
+
 
 new Vue({
   el: '#app',
@@ -36,7 +39,12 @@ new Vue({
       .then(resdata => this.movies = resdata);
 
     this.$bus.$on('check-filter', checkFilter.bind(this));
+    this.$bus.$on('set-day', setDay.bind(this));
   },
   router
 });
+
+
+
+
 

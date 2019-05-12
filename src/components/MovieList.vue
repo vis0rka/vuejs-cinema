@@ -8,7 +8,12 @@
         v-bind:movie="movie.movie"
       >
         <div class="movie-sessions">
-          <div v-for="session in filteredSessions(movie.sessions)" class="session-time-wrapper">
+          <div
+            v-for="session in filteredSessions(movie.sessions)"
+            v-tooltip="{seats: session.seats}"
+            class="session-time-wrapper tooltip-wrapper"
+            v-bind:key="session.id"
+          >
             <div class="session-time">{{formatSessionTime(session.time)}}</div>
           </div>
         </div>
@@ -29,7 +34,7 @@ export default {
   },
   props: ["genre", "time", "movies", "day"],
   methods: {
-        formatSessionTime(raw) {
+    formatSessionTime(raw) {
       return this.$moment(raw).format("h:mm A");
     },
     filteredSessions(sessions) {
